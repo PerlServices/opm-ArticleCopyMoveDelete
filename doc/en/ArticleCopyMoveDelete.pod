@@ -1,0 +1,57 @@
+# $Id: ArticleCopyMoveDelete.pod,v 1.4 2015/03/13 08:25:22 millinger Exp $
+
+=head1 General
+
+This package provides an additional article action which allows to copy, move from one ticket to another. It also allows to delete articles - see https://otrsteam.ideascale.com/a/dtd/Copy-OR-Merge-Single-Article-To-Other-Ticket/321449-10369.
+
+This functionality has been extracted from OTRS extension package KIX4OTRS. 
+
+=head1 Usage Remarks
+
+=over 4 
+
+=item * The function is restricted to the owner of the ticket.
+
+=item * For the first article in the ticket, options for moving and deleting are not available.
+
+=item * If there is time accounted in an article which will be copied, you may define if and how this accounted time is copied to the destination ticket. 
+
+=item * Due to the lack of extension methods for frontend modules of other extensions (i.e. OTRS::ITSM) in OTRS and missing configurability of article actions, the article copy-, move-, delete- function is integrated into the frontend by OutputFilters. Disabling ArticlePrint will also disable this function.
+
+=back
+
+=head1 To Do
+
+=over 4 
+
+=item * output filter creates two action links after reload of AgentTicketZoom after article creation
+
+=item * make restriction to owner configurable
+
+
+=back
+
+
+=head1 Copyright
+
+Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+
+ArticleCopyMoveDelete written/edited by:
+
+=over 4 
+
+=item * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+
+=item * Rene(dot)Boehm(at)cape(dash)it(dot)de
+
+=item * Torsten(dot)Thau(at)cape(dash)it(dot)de
+
+=item * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+
+=item * Mario(dot)Illinger(at)cape(dash)it(dot)de
+
+=back
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+
+=cut
