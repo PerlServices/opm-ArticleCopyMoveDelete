@@ -23,9 +23,11 @@ use warnings;
 
 use Kernel::System::VariableCheck qw(:all);
 
-our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::System::Ticket',
+our @ObjectDependencies = qw(
+    Kernel::Config
+    Kernel::System::Ticket
+    Kernel::Output::HTML::Layout
+    Kernel::System::Web::Request
 );
 
 sub new {
@@ -35,25 +37,26 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # create needed objects
-    $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
-    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
     return $Self;
 }
 
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $Output = $Self->{LayoutObject}->Header( Type => 'Small' );
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    my $Output = $LayoutObject->Header( Type => 'Small' );
 
     # check permissions
     my $Access = 0;
-    my $Groups = $Self->{ConfigObject}->Get('Frontend::Module')->{AgentArticleCopyMove}->{Group}
+    my $Groups = $ConfigObject->Get('Frontend::Module')->{AgentArticleCopyMove}->{Group}
         || '';
     if ( $Groups && ref($Groups) eq 'ARRAY' ) {
         for my $Group ( @{$Groups} ) {
-            next if !$Self->{LayoutObject}->{"UserIsGroup[$Group]"};
-            if ( $Self->{LayoutObject}->{"UserIsGroup[$Group]"} eq 'Yes' ) {
+            next if !$LayoutObject->{"UserIsGroup[$Group]"};
+            if ( $LayoutObject->{"UserIsGroup[$Group]"} eq 'Yes' ) {
                 $Access = 1;
                 last;
             }
@@ -64,24 +67,24 @@ sub Run {
     }
 
     if ( !$Access ) {
-        $Output .= $Self->{LayoutObject}->Warning(
+        $Output .= $LayoutObject->Warning(
             Message => 'Sorry, you are not a member of allowed groups!',
             Comment => 'Please contact your admin.',
         );
-        $Output .= $Self->{LayoutObject}->Footer( Type => 'Small' );
+        $Output .= $LayoutObject->Footer( Type => 'Small' );
         return $Output;
     }
 
     # get params
     my %GetParam;
     for (qw(ArticleID TicketID ArticleAction NewTicketNumber TimeUnits TimeUnitsOriginal)) {
-        $GetParam{$_} = $Self->{ParamObject}->GetParam( Param => $_ ) || '';
+        $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
     }
 
     # check needed stuff
     for (qw(ArticleID TicketID)) {
         if ( !$GetParam{$_} ) {
-            return $Self->{LayoutObject}->ErrorScreen(
+            return $LayoutObject->ErrorScreen(
                 Message => "AgentArticleCopyMove: Need $_!",
                 Comment => 'Please contact your admin.',
             );
@@ -89,23 +92,23 @@ sub Run {
     }
 
     # check permissions
-    $Access = $Self->{TicketObject}->OwnerCheck(
+    $Access = $TicketObject->OwnerCheck(
         TicketID => $GetParam{TicketID},
         OwnerID  => $Self->{UserID},
     );
 
     # error screen, don't show ticket
     if ( !$Access ) {
-        $Output .= $Self->{LayoutObject}->Warning(
+        $Output .= $LayoutObject->Warning(
             Message => 'Sorry, you need to be owner of the selected ticket to do this action!',
             Comment => 'Please change the owner first.',
         );
-        $Output .= $Self->{LayoutObject}->Footer( Type => 'Small' );
+        $Output .= $LayoutObject->Footer( Type => 'Small' );
         return $Output;
     }
 
     # get first article
-    my %FirstArticle = $Self->{TicketObject}->ArticleFirstArticle(
+    my %FirstArticle = $TicketObject->ArticleFirstArticle(
         TicketID => $GetParam{TicketID},
     );
 
@@ -115,27 +118,27 @@ sub Run {
     }
 
     # get article content
-    my %Article = $Self->{TicketObject}->ArticleGet(
+    my %Article = $TicketObject->ArticleGet(
         ArticleID => $GetParam{ArticleID},
     );
 
     # get accounting time
-    $Param{AccountedTime} = $Self->{TicketObject}->ArticleAccountedTimeGet(
+    $Param{AccountedTime} = $TicketObject->ArticleAccountedTimeGet(
         ArticleID => $GetParam{ArticleID},
     );
-    if ( $Self->{ConfigObject}->Get('Ticket::Frontend::NeedAccountedTime') ) {
+    if ( $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime') ) {
         $Param{NeedAccountedTime} = 'Validate_Required';
     }
 
     if ( $Param{AccountedTime} ) {
-        $Self->{LayoutObject}->Block(
+        $LayoutObject->Block(
             Name => 'TimeUnitsJs',
             Data => {
                 %Param,
                 TimeUnitsOriginal => $GetParam{TimeUnitsOriginal} || 'Difference',
             },
         );
-        $Self->{LayoutObject}->Block(
+        $LayoutObject->Block(
             Name => 'TimeUnits',
             Data => \%Param,
         );
@@ -145,16 +148,16 @@ sub Run {
         my $NewTicketID = $GetParam{TicketID};
 
         # challenge token check for write action
-        $Self->{LayoutObject}->ChallengeTokenCheck();
+        $LayoutObject->ChallengeTokenCheck();
 
         # delete article
         if ( $GetParam{ArticleAction} eq 'Delete' ) {
-            my $DeleteResult = $Self->{TicketObject}->ArticleFullDelete(
+            my $DeleteResult = $TicketObject->ArticleFullDelete(
                 ArticleID => $GetParam{ArticleID},
                 UserID    => $Self->{UserID},
             );
             if ( !$DeleteResult ) {
-                return $Self->{LayoutObject}->ErrorScreen(
+                return $LayoutObject->ErrorScreen(
                     Message =>
                         "Can't delete article $GetParam{ArticleID} from ticket $Article{TicketNumber}!",
                     Comment => 'Please contact your admin.',
@@ -162,7 +165,7 @@ sub Run {
             }
 
             # add history to original ticket
-            $Self->{TicketObject}->HistoryAdd(
+            $TicketObject->HistoryAdd(
                 Name => "Deleted article $GetParam{ArticleID} from ticket $Article{TicketNumber}",
                 HistoryType  => 'Misc',
                 TicketID     => $GetParam{TicketID},
@@ -175,7 +178,7 @@ sub Run {
 
             # check needed stuff
             if ( !$GetParam{NewTicketNumber} ) {
-                $Output .= $Self->{LayoutObject}->Notify(
+                $Output .= $LayoutObject->Notify(
                     Info => 'Perhaps, you forgot to enter a ticket number!',
                 );
                 $Output .= $Self->Form(
@@ -187,14 +190,13 @@ sub Run {
             }
 
             # get new ticket id
-            $NewTicketID = $Self->{TicketObject}->TicketCheckNumber(
+            $NewTicketID = $TicketObject->TicketCheckNumber(
                 Tn => $GetParam{NewTicketNumber},
             );
             if ( !$NewTicketID ) {
-                $Output .= $Self->{LayoutObject}->Notify(
+                $Output .= $LayoutObject->Notify(
                     Info =>
-                        $Self->{LayoutObject}->{LanguageObject}
-                        ->Get('Sorry, no ticket found for ticket number: ')
+                        $LayoutObject->{LanguageObject}>Get('Sorry, no ticket found for ticket number: ')
                         . $GetParam{NewTicketNumber}
                         . '!',
                 );
@@ -207,39 +209,39 @@ sub Run {
             }
 
             # check owner of new ticket
-            my $NewAccessOk = $Self->{TicketObject}->OwnerCheck(
+            my $NewAccessOk = $TicketObject->OwnerCheck(
                 TicketID => $NewTicketID,
                 OwnerID  => $Self->{UserID},
             );
             if ( !$NewAccessOk ) {
-                $Output .= $Self->{LayoutObject}->Notify(
+                $Output .= $LayoutObject->Notify(
                     Info => 'Sorry, you need to be owner of the new ticket to do this action!',
                 );
                 $Output .= $Self->Form(
                     %Article,
                     %GetParam,
                 );
-                $Output .= $Self->{LayoutObject}->Footer( Type => 'Small' );
+                $Output .= $LayoutObject->Footer( Type => 'Small' );
                 return $Output;
             }
         }
 
         # copy article
         if ( $GetParam{ArticleAction} eq 'Copy' ) {
-            my $CopyResult = $Self->{TicketObject}->ArticleCopy(
+            my $CopyResult = $TicketObject->ArticleCopy(
                 TicketID  => $NewTicketID,
                 ArticleID => $GetParam{ArticleID},
                 UserID    => $Self->{UserID},
             );
             if ( $CopyResult eq 'CopyFailed' ) {
-                return $Self->{LayoutObject}->ErrorScreen(
+                return $LayoutObject->ErrorScreen(
                     Message =>
                         "Can't copy article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
                     Comment => 'Please contact your admin.',
                 );
             }
             elsif ( $CopyResult eq 'UpdateFailed' ) {
-                return $Self->{LayoutObject}->ErrorScreen(
+                return $LayoutObject->ErrorScreen(
                     Message => "Can't update times for article $GetParam{ArticleID}!",
                     Comment => 'Please contact your admin.',
                 );
@@ -247,7 +249,7 @@ sub Run {
 
             # add accounted time to new article
             if ( $GetParam{TimeUnits} ) {
-                $Self->{TicketObject}->TicketAccountTime(
+                $TicketObject->TicketAccountTime(
                     TicketID  => $NewTicketID,
                     ArticleID => $CopyResult,
                     TimeUnit  => $GetParam{TimeUnits},
@@ -257,14 +259,14 @@ sub Run {
 
             # delete accounted time from old article
             if ( $GetParam{TimeUnitsOriginal} ne 'Keep' ) {
-                $Self->{TicketObject}->ArticleAccountedTimeDelete(
+                $TicketObject->ArticleAccountedTimeDelete(
                     ArticleID => $GetParam{ArticleID},
                 );
             }
 
             # save residual if chosen to old article
             if ( $GetParam{TimeUnitsOriginal} eq 'Difference' ) {
-                $Self->{TicketObject}->TicketAccountTime(
+                $TicketObject->TicketAccountTime(
                     TicketID  => $GetParam{TicketID},
                     ArticleID => $GetParam{ArticleID},
                     TimeUnit  => ( $Param{AccountedTime} - $GetParam{TimeUnits} ),
@@ -273,7 +275,7 @@ sub Run {
             }
 
             # add history to original ticket
-            $Self->{TicketObject}->HistoryAdd(
+            $TicketObject->HistoryAdd(
                 Name => "Copied article $GetParam{ArticleID} from "
                     . "ticket $Article{TicketNumber} to ticket $GetParam{NewTicketNumber} "
                     . "as article $CopyResult",
@@ -286,20 +288,20 @@ sub Run {
 
         # move article
         elsif ( $GetParam{ArticleAction} eq 'Move' ) {
-            my $MoveResult = $Self->{TicketObject}->ArticleMove(
+            my $MoveResult = $TicketObject->ArticleMove(
                 TicketID  => $NewTicketID,
                 ArticleID => $GetParam{ArticleID},
                 UserID    => $Self->{UserID},
             );
             if ( $MoveResult eq 'MoveFailed' ) {
-                return $Self->{LayoutObject}->ErrorScreen(
+                return $LayoutObject->ErrorScreen(
                     Message =>
                         "Can't move article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
                     Comment => 'Please contact your admin.',
                 );
             }
             if ( $MoveResult eq 'AccountFailed' ) {
-                return $Self->{LayoutObject}->ErrorScreen(
+                return $LayoutObject->ErrorScreen(
                     Message =>
                         "Can't update ticket id in time accounting data for article $GetParam{ArticleID}!",
                     Comment => 'Please contact your admin.',
@@ -307,7 +309,7 @@ sub Run {
             }
 
             # add history to new ticket
-            $Self->{TicketObject}->HistoryAdd(
+            $TicketObject->HistoryAdd(
                 Name => "Moved article $GetParam{ArticleID} from ticket"
                     . " $Article{TicketNumber} to ticket $GetParam{NewTicketNumber} ",
                 HistoryType  => 'Misc',
@@ -317,7 +319,7 @@ sub Run {
             );
 
             # add history to old ticket
-            $Self->{TicketObject}->HistoryAdd(
+            $TicketObject->HistoryAdd(
                 Name => "Moved article $GetParam{ArticleID} from ticket"
                     . " $Article{TicketNumber} to ticket $GetParam{NewTicketNumber} ",
                 HistoryType  => 'Misc',
@@ -328,7 +330,7 @@ sub Run {
         }
 
         # redirect
-        return $Self->{LayoutObject}->PopupClose(
+        return $LayoutObject->PopupClose(
             URL => "Action=AgentTicketZoom&TicketID=$NewTicketID"
         );
     }
@@ -345,27 +347,29 @@ sub Run {
 sub Form {
     my ( $Self, %Param ) = @_;
 
-    $Self->{LayoutObject}->Block(
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    $LayoutObject->Block(
         Name => 'ArticleActionOptions',
         Data => \%Param,
     );
 
     if ( $Param{FurtherActionOptions} ) {
-        $Self->{LayoutObject}->Block(
+        $LayoutObject->Block(
             Name => 'FurtherActionOptions',
             Data => \%Param,
         );
     }
 
     # start output
-    my $Output = $Self->{LayoutObject}->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'AgentArticleCopyMove',
         Data         => {
             %Param,
             ArticleAction => $Param{ArticleAction} || 'Copy',
         },
     );
-    $Output .= $Self->{LayoutObject}->Footer( Type => 'Small' );
+    $Output .= $LayoutObject->Footer( Type => 'Small' );
     return $Output;
 }
 

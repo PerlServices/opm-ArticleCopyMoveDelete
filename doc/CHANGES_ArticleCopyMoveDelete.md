@@ -1,8 +1,12 @@
 # Change log of ArticleCopyMoveDelete
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de/
+# Changes Copyright (C) 2016 Perl-Services.de, http://perl-services.de
 * $Id: CHANGES_ArticleCopyMoveDelete.md,v 1.3 2015/03/13 08:24:50 millinger Exp $
 
 # ROADMAP TASKS
+
+#5.0.1 (2016/06/06)
+* (2016/06/06) - changes for OTRS framework 5.0.x (reneeb)
 
 #4.0.0 (2015/03/13)
 * (2015/03/13) - CR: T2015031190000358 (added spanish translation file. Thanks to Eladio Galvez from JoopBox.com) (millinger)

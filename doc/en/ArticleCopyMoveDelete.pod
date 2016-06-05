@@ -1,10 +1,12 @@
-# $Id: ArticleCopyMoveDelete.pod,v 1.4 2015/03/13 08:25:22 millinger Exp $
+=encoding utf-8
 
 =head1 General
 
 This package provides an additional article action which allows to copy, move from one ticket to another. It also allows to delete articles - see https://otrsteam.ideascale.com/a/dtd/Copy-OR-Merge-Single-Article-To-Other-Ticket/321449-10369.
 
 This functionality has been extracted from OTRS extension package KIX4OTRS. 
+
+Since version 5.0.1 Perl-Services.de publishes only ports for OTRS versions >= 5.0.1. No new features will be added. The original package was merged back to KIX4OTRS!
 
 =head1 Usage Remarks
 
@@ -35,6 +37,7 @@ This functionality has been extracted from OTRS extension package KIX4OTRS.
 =head1 Copyright
 
 Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+Changes Copyright (C) 2016 Perl-Services.de, http://perl-services.de
 
 ArticleCopyMoveDelete written/edited by:
 
@@ -43,6 +46,8 @@ ArticleCopyMoveDelete written/edited by:
 =item * Anna(dot)Litvinova(at)cape(dash)it(dot)de
 
 =item * Rene(dot)Boehm(at)cape(dash)it(dot)de
+
+=item * Renée Bäcker
 
 =item * Torsten(dot)Thau(at)cape(dash)it(dot)de
 

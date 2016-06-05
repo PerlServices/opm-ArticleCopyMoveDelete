@@ -38,11 +38,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{ConfigObject}   = $Kernel::OM->Get('Kernel::Config');
-    $Self->{LanguageObject} = $Kernel::OM->Get('Kernel::Language');
-    $Self->{LayoutObject}   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{TicketObject}   = $Kernel::OM->Get('Kernel::System::Ticket');
-
     if ( !$Param{UserType} || ( $Param{UserType} ne 'User' && $Param{UserType} ne 'Customer' ) ) {
         return $Self;
     }
@@ -57,6 +52,11 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    my $ConfigObject   = $Kernel::OM->Get('Kernel::Config');
+    my $LanguageObject = $Kernel::OM->Get('Kernel::Language');
+    my $LayoutObject   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject   = $Kernel::OM->Get('Kernel::System::Ticket');
+
     if ( !$Self->{UserType} || ( $Self->{UserType} ne 'User' ) ) {
         return $Self;
     }
@@ -69,11 +69,10 @@ sub Run {
     # get configuration for ArticleCopyMoveDelete button...
     my $ArticleCopyMoveDeleteReg = "";
     if ( $Self->{UserType} && $Self->{UserType} eq 'User' ) {
-        $ArticleCopyMoveDeleteReg
-            = $Self->{ConfigObject}->Get('Frontend::Module')->{AgentArticleCopyMove} || '';
+        $ArticleCopyMoveDeleteReg = $ConfigObject->Get('Frontend::Module')->{AgentArticleCopyMove} || '';
     }
 
-    my $SessionIDParamName = $Self->{ConfigObject}->Get('SessionName') || 'Session';
+    my $SessionIDParamName = $ConfigObject->Get('SessionName') || 'Session';
 
     return if !$ArticleCopyMoveDeleteReg;
 
@@ -85,9 +84,9 @@ sub Run {
         . $SessionIDParamName
         . '=OTRS_SESSION" class="AsPopup PopupType_TicketAction" '
         . ' title="'
-        . $Self->{LanguageObject}->Translate( $ArticleCopyMoveDeleteReg->{Description} )
+        . $LanguageObject->Translate( $ArticleCopyMoveDeleteReg->{Description} )
         . '">'
-        . $Self->{LanguageObject}->Translate('Copy/Move/Delete')
+        . $LanguageObject->Translate('Copy/Move/Delete')
         . '</a></li>';
 
     my $AgentPatternShort = '<li>.+Action=AgentTicketPrint;TicketID=(\d+);'
@@ -112,8 +111,8 @@ sub Run {
         my $Groups = $ArticleCopyMoveDeleteReg->{Group} || '';
         if ( $Groups && ref($Groups) eq 'ARRAY' ) {
             for my $Group ( @{$Groups} ) {
-                next if !$Self->{LayoutObject}->{"UserIsGroup[$Group]"};
-                if ( $Self->{LayoutObject}->{"UserIsGroup[$Group]"} eq 'Yes' ) {
+                next if !$LayoutObject->{"UserIsGroup[$Group]"};
+                if ( $LayoutObject->{"UserIsGroup[$Group]"} eq 'Yes' ) {
                     $Access = 1;
                     last;
                 }
@@ -122,7 +121,7 @@ sub Run {
         return if ( !$Access );
 
         # check owner...
-        $Access = $Self->{TicketObject}->OwnerCheck(
+        $Access = $TicketObject->OwnerCheck(
             TicketID => $TicketID,
             OwnerID  => $Self->{UserID},
         );
