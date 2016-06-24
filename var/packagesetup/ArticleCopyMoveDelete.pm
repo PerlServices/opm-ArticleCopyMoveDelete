@@ -1,19 +1,18 @@
 # --
-# AgentArticleCopyMove.pm - code run during package de-/installation
+# ArticleCopyMoveDelete.pm - code run during package de-/installation
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
 # * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# * info(at)perl(dash)perl-services(dot)de
 #
-# --
-# $Id: AgentArticleCopyMove.pm,v 1.3 2015/03/13 08:24:50 millinger Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-package var::packagesetup::AgentArticleCopyMove;
+package var::packagesetup::ArticleCopyMoveDelete;
 use strict;
 use warnings;
 
