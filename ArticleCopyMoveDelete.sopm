@@ -85,17 +85,16 @@
     
     
     <Filelist>
-        <File Location="ArticleCopyMoveDelete.sopm" Permission="644"/>
         <File Location="doc/CHANGES_ArticleCopyMoveDelete.md" Permission="644"/>
         <File Location="doc/en/ArticleCopyMoveDelete.pod" Permission="644"/>
         <File Location="Kernel/Config/Files/AgentArticleCopyMove.xml" Permission="644"/>
         <File Location="Kernel/Language/de_ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Language/es_ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Modules/AgentArticleCopyMove.pm" Permission="644"/>
-        <File Location="Kernel/Output/HTML/OutputFilterArticleCopyMoveDelete.pm" Permission="644"/>
-        <File Location="Kernel/Output/HTML/Standard/AgentArticleCopyMove.tt" Permission="644"/>
+        <File Location="Kernel/Output/HTML/FilterElementPost/ArticleCopyMoveDelete.pm" Permission="644"/>
+        <File Location="Kernel/Output/HTML/Templates/Standard/AgentArticleCopyMove.tt" Permission="644"/>
         <File Location="Kernel/System/Ticket/TicketExtensionsArticleCopyMove.pm" Permission="644"/>
-        <File Location="var/packagesetup/AgentArticleCopyMove.pm" Permission="644"/>
+        <File Location="var/packagesetup/ArticleCopyMoveDelete.pm" Permission="644"/>
     </Filelist>
     <DatabaseInstall>
     </DatabaseInstall>
