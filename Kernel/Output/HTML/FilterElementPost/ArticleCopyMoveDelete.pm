@@ -1,5 +1,5 @@
 # --
-# Kernel/Output/HTML/OutputFilterArticleCopyMoveDelete.pm - Output filter to provide a link
+# Kernel/Output/HTML/FilterElementPost/ArticleCopyMoveDelete.pm - Output filter to provide a link
 # to switch from customers to agents frontend and vice versa
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
@@ -8,6 +8,7 @@
 # * Anna(dot)Litvinova(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
 # * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# * info(at)perl(dash)services(dot)de
 #
 # --
 # $Id: OutputFilterArticleCopyMoveDelete.pm,v 1.7 2015/03/13 08:24:50 millinger Exp $
@@ -17,7 +18,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Output::HTML::OutputFilterArticleCopyMoveDelete;
+package Kernel::Output::HTML::FilterElementPost::ArticleCopyMoveDelete;
 
 use strict;
 use warnings;
