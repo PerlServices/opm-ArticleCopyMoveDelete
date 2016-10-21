@@ -1,12 +1,14 @@
 # --
 # Kernel/Modules/AgentArticleCopyMove.pm - to copy or move articles
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Changes Copyright (C) 2016 Perl-Services.de, http://perl-services.de
 #
 # written/edited by:
 # * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
 # * Rene(dot)Boehm(at)cape(dash)it(dot)de
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * info(at)perl(dash)services(dot)de
 #
 # --
 # $Id: AgentArticleCopyMove.pm,v 1.4 2015/03/13 08:24:50 millinger Exp $
@@ -46,6 +48,7 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     my $Output = $LayoutObject->Header( Type => 'Small' );
 
