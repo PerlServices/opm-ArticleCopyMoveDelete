@@ -5,8 +5,11 @@
 
 # ROADMAP TASKS
 
+#5.0.2 (2016/12/02)
+* (2016/12/02) - Added Hungarian translation (urbalazs)
+
 #5.0.1 (2016/06/06)
-* (2016/06/06) - changes for OTRS framework 5.0.x (reneeb)
+* (2016/06/06) - Changes for OTRS framework 5.0.x (reneeb)
 
 #4.0.0 (2015/03/13)
 * (2015/03/13) - CR: T2015031190000358 (added spanish translation file. Thanks to Eladio Galvez from JoopBox.com) (millinger)
