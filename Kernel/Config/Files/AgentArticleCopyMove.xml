@@ -17,14 +17,14 @@
     </ConfigItem>
 
     <ConfigItem Name="Frontend::Module###AgentArticleCopyMove" Required="0" Valid="1">
-        <Description Translatable="1">Frontend module registration for AgentArticleCopyMove.</Description>
+        <Description Translatable="1">Frontend module registration for AgentArticleCopyMoveDelete.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
                 <Group>users</Group>
-                <Description>Copy, move or delete selected article</Description>
-                <Title>Copy, Move or Delete Article</Title>
+                <Description Translatable="1">Copy, move or delete selected article.</Description>
+                <Title Translatable="1">Copy, Move or Delete Article</Title>
                 <NavBarName>
                 </NavBarName>
                 <Loader>

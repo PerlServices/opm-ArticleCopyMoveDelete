@@ -23,6 +23,7 @@ package Kernel::Modules::AgentArticleCopyMove;
 use strict;
 use warnings;
 
+use Kernel::Language qw(Translatable);
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = qw(
@@ -71,8 +72,8 @@ sub Run {
 
     if ( !$Access ) {
         $Output .= $LayoutObject->Warning(
-            Message => 'Sorry, you are not a member of allowed groups!',
-            Comment => 'Please contact your admin.',
+            Message => Translatable('Sorry, you are not a member of allowed groups!'),
+            Comment => Translatable('Please contact the administrator.'),
         );
         $Output .= $LayoutObject->Footer( Type => 'Small' );
         return $Output;
@@ -88,8 +89,8 @@ sub Run {
     for (qw(ArticleID TicketID)) {
         if ( !$GetParam{$_} ) {
             return $LayoutObject->ErrorScreen(
-                Message => "AgentArticleCopyMove: Need $_!",
-                Comment => 'Please contact your admin.',
+                Message => $LayoutObject->{LanguageObject}->Translate( 'AgentArticleCopyMoveDelete: Need %s!', $_ ),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
     }
@@ -103,8 +104,8 @@ sub Run {
     # error screen, don't show ticket
     if ( !$Access ) {
         $Output .= $LayoutObject->Warning(
-            Message => 'Sorry, you need to be owner of the selected ticket to do this action!',
-            Comment => 'Please change the owner first.',
+            Message => Translatable('Sorry, you need to be owner of the selected ticket to do this action!'),
+            Comment => Translatable('Please change the owner first.'),
         );
         $Output .= $LayoutObject->Footer( Type => 'Small' );
         return $Output;
@@ -161,9 +162,12 @@ sub Run {
             );
             if ( !$DeleteResult ) {
                 return $LayoutObject->ErrorScreen(
-                    Message =>
-                        "Can't delete article $GetParam{ArticleID} from ticket $Article{TicketNumber}!",
-                    Comment => 'Please contact your admin.',
+                    Message => $LayoutObject->{LanguageObject}->Translate(
+                        'Can\'t delete article %s from ticket %s!',
+                        $GetParam{ArticleID},
+                        $Article{TicketNumber},
+                    ),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -182,7 +186,7 @@ sub Run {
             # check needed stuff
             if ( !$GetParam{NewTicketNumber} ) {
                 $Output .= $LayoutObject->Notify(
-                    Info => 'Perhaps, you forgot to enter a ticket number!',
+                    Info => Translatable('Perhaps, you forgot to enter a ticket number!'),
                 );
                 $Output .= $Self->Form(
                     %Article,
@@ -198,10 +202,10 @@ sub Run {
             );
             if ( !$NewTicketID ) {
                 $Output .= $LayoutObject->Notify(
-                    Info =>
-                        $LayoutObject->{LanguageObject}>Get('Sorry, no ticket found for ticket number: ')
-                        . $GetParam{NewTicketNumber}
-                        . '!',
+                    Info => $LayoutObject->{LanguageObject}>Translate(
+                        'Sorry, no ticket found for ticket number: %s!',
+                        $GetParam{NewTicketNumber},
+                    ),
                 );
                 $Output .= $Self->Form(
                     %Article,
@@ -218,7 +222,7 @@ sub Run {
             );
             if ( !$NewAccessOk ) {
                 $Output .= $LayoutObject->Notify(
-                    Info => 'Sorry, you need to be owner of the new ticket to do this action!',
+                    Info => Translatable('Sorry, you need to be owner of the new ticket to do this action!'),
                 );
                 $Output .= $Self->Form(
                     %Article,
@@ -238,15 +242,21 @@ sub Run {
             );
             if ( $CopyResult eq 'CopyFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message =>
-                        "Can't copy article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
-                    Comment => 'Please contact your admin.',
+                    Message => $LayoutObject->{LanguageObject}>Translate(
+                        'Can\'t copy article %s to ticket %s!',
+                        $GetParam{ArticleID},
+                        $GetParam{NewTicketNumber},
+                    ),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
             elsif ( $CopyResult eq 'UpdateFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => "Can't update times for article $GetParam{ArticleID}!",
-                    Comment => 'Please contact your admin.',
+                    Message => $LayoutObject->{LanguageObject}>Translate(
+                        'Can\'t update times for article %s!',
+                        $GetParam{ArticleID},
+                    ),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -298,16 +308,21 @@ sub Run {
             );
             if ( $MoveResult eq 'MoveFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message =>
-                        "Can't move article $GetParam{ArticleID} to ticket $GetParam{NewTicketNumber}!",
-                    Comment => 'Please contact your admin.',
+                    Message => $LayoutObject->{LanguageObject}>Translate(
+                        'Can\'t move article %s to ticket %s!',
+                        $GetParam{ArticleID},
+                        $GetParam{NewTicketNumber},
+                    ),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
             if ( $MoveResult eq 'AccountFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message =>
-                        "Can't update ticket id in time accounting data for article $GetParam{ArticleID}!",
-                    Comment => 'Please contact your admin.',
+                    Message => $LayoutObject->{LanguageObject}>Translate(
+                        'Can\'t update ticket ID in time accounting data for article %s!',
+                        $GetParam{ArticleID},
+                    ),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 

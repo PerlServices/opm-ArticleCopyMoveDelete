@@ -1,0 +1,82 @@
+=encoding utf-8
+
+=head1 Általános
+
+Ez a csomag további bejegyzésműveleteket biztosít, amely lehetővé teszi a 
+másolást, valamint egyik jegyből a másikba történő áthelyezést. Lehetővé teszi 
+a bejegyzések törlését is - lásd: 
+https://otrsteam.ideascale.com/a/dtd/Copy-OR-Merge-Single-Article-To-Other-Ticket/321449-10369
+
+Ez a funkcionalitás a KIX4OTRS kiegészítő csomagból lett kiszedve.
+
+Az 5.0.1-es verzió óta a Perl-Services.de csak az 5.0.1 vagy újabb verziókhoz 
+teszi közzé. Nem lesznek új funkciók hozzáadva. Az eredeti csomag be lett 
+olvasztva a KIX4OTRS csomagba!
+
+=head1 Használati megjegyzések
+
+=over 4 
+
+=item * A funkció a jegy tulajdonosára van korlátozva.
+
+=item * A jegyben az első bejegyzésnél az áthelyezés és a törlés funkció nem 
+érhető el.
+
+=item * Ha elszámolt idő van egy bejegyzésben, amely másolásra kerül, akkor 
+meghatározhatja, hogy ez az elszámolt idő át legyen-e másolva a céljegybe és 
+hogyan legyen másolva.
+
+=item * Az OTRS-ben más kiterjesztések (azaz OTRS::ITSM) előtétprogram 
+moduljai kiterjesztés-módszereinek hiánya, valamint a bejegyzésműveletek 
+hiányzó beállíthatósága miatt a bejegyzés másolási, áthelyezési és törlési 
+funkciói kimenetszűrőkkel vannak integrálva az előtétprogramba.
+
+=back
+
+=head1 Teendők
+
+=over 4 
+
+=item * A bejegyzéslétrehozás után a kimenetszűrő két művelethivatkozást hoz 
+létre az ügyintézői jegynagyítás újratöltése után.
+
+=item * Beállíthatóvá kellene tenni a tulajdonosra történő korlátozást.
+
+=back
+
+
+=head1 Szerzői jog
+
+Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+Változtatások: Copyright (C) 2016 Perl-Services.de, http://perl-services.de
+
+Az ArticleCopyMoveDelete modult a következők írták vagy szerkesztették:
+
+=over 4 
+
+=item * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+
+=item * Rene(dot)Boehm(at)cape(dash)it(dot)de
+
+=item * Renée Bäcker
+
+=item * Torsten(dot)Thau(at)cape(dash)it(dot)de
+
+=item * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+
+=item * Mario(dot)Illinger(at)cape(dash)it(dot)de
+
+=item * Úr Balázs, http://www.otrs-megoldasok.hu
+
+=back
+
+Ez a szoftver MINDENFÉLE GARANCIA NÉLKÜL kerül közzétételre. A részletes 
+licencinformációkért (AGPL) nézze meg a mellékelt COPYING fájlt. Ha nem kapta 
+meg ezt a fájlt, akkor nézze meg a http://www.gnu.org/licenses/agpl.txt címen.
+
+=head1 Magyar fordítás
+
+A magyar fordítást az OTRS-megoldások csapata készítette.
+Copyright (C) 2016 Úr Balázs, L<http://otrs-megoldasok.hu>
+
+=cut

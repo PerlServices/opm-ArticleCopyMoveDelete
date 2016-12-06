@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.1">
     <Name>ArticleCopyMoveDelete</Name>
-    <Version>5.0.1</Version>
-    <Vendor>since 5.0.1 Perl-Services.de, original version: c.a.p.e. IT GmbH</Vendor>
+    <Version>5.0.2</Version>
+    <Vendor>Perl-Services.de, c.a.p.e. IT GmbH</Vendor>
     <URL>http://www.cape-it.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
-    <ChangeLog Version="5.0.1" Date="2016-06-07 10:46:18">changes for OTRS-Framework 5.0.x.</ChangeLog>
+    <ChangeLog Version="5.0.1" Date="2016-06-07 10:46:18">Changes for OTRS Framework 5.0.x.</ChangeLog>
     <ChangeLog Version="4.0.0" Date="2015-03-13 10:46:18">CR: T2015031190000358 (added spanish translation file. Thanks to Eladio Galvez from JoopBox.com), T2015031190000358 (changes for OTRS-Framework 4.0.x).</ChangeLog>
-    <Description Lang="en">ArticleCopyMoveDelete - allows to copy, move or delete articles.</Description>
+    <Description Lang="en">Allows to copy, move or delete articles.</Description>
+    <Description Lang="hu">Lehetővé teszi a bejegyzések másolását, áthelyezését vagy törlését.</Description>
     <Framework>5.0.x</Framework>
     <IntroInstall Lang="en" Title="Install Information" Type="pre">
         &lt;br/&gt;
@@ -26,7 +27,7 @@
         &lt;strong&gt;WELCOME&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        Due to the lack of configurable article actions in basic OTRS this package uses an output filter, which hooks on ArticlePrint. So be aware, that if you disable ArticlePrint you will also disable ArticleCopyMove.
+        Due to the lack of configurable article actions in basic OTRS this package uses an output filter, which hooks on ArticlePrint. So be aware, that if you disable ArticlePrint you will also disable ArticleCopyMoveDelete.
         &lt;br/&gt;
         &lt;br/&gt;
         c.a.p.e. IT ...easy.&lt;br/&gt;
@@ -55,8 +56,50 @@
         c.a.p.e. IT ...easy.&lt;br/&gt;
         &lt;br/&gt;
     </IntroUpgrade>
-    <IntroUpgrade Lang="en" Title="Upgrade Information" Type="post">
+    <IntroInstall Lang="hu" Title="Telepítési információk" Type="pre">
         &lt;br/&gt;
+        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Ön az ArticleCopyMoveDelete OTRS csomag telepítésére készül.
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        c.a.p.e. IT ...easy.&lt;br/&gt;
+        &lt;br/&gt;
+    </IntroInstall>
+    <IntroInstall Lang="hu" Title="Telepítési információk" Type="post">
+        &lt;br/&gt;
+        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Az alap OTRS-ben a beállítható bejegyzésműveletek hiánya miatt ez a csomag egy
+        kimenetszűrőt használ, amely a bejegyzésnyomtatásra kapcsolódik. Ezért legyen
+        tudatában annak, hogy ha letiltja a bejegyzésnyomtatást, akkor le fogja tiltani
+        a bejegyzés másolását, áthelyezését és törlését is.
+        &lt;br/&gt;
+        &lt;br/&gt;
+        c.a.p.e. IT ...easy.&lt;br/&gt;
+        &lt;br/&gt;
+    </IntroInstall>
+    <IntroUninstall Lang="hu" Title="Eltávolítási információk" Type="pre">
+        &lt;br/&gt;
+        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Ön az ArticleCopyMoveDelete OTRS kiegészítő csomag ELTÁVOLÍTÁSÁRA készül.&lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        c.a.p.e. IT ...easy.&lt;br/&gt;
+        &lt;br/&gt;
+    </IntroUninstall>
+    <IntroUpgrade Lang="hu" Title="Frissítési információk" Type="pre">
+        &lt;br/&gt;
+        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Ön az ArticleCopyMoveDelete OTRS kiegészítő csomag frissítésére készül.&lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
         c.a.p.e. IT ...easy.&lt;br/&gt;
@@ -65,43 +108,31 @@
     <CodeInstall Type="post">
         my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
         $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeInstall();
-    
     </CodeInstall>
     <CodeUpgrade Type="post">
         my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
         $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUpgrade();
-    
     </CodeUpgrade>
     <CodeUninstall Type="pre">
         my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
         $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUninstall();
-    
     </CodeUninstall>
     <CodeReinstall Type="post">
         my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
         $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeReinstall();
-    
     </CodeReinstall>
-    
-    
     <Filelist>
         <File Location="doc/CHANGES_ArticleCopyMoveDelete.md" Permission="644"/>
         <File Location="doc/en/ArticleCopyMoveDelete.pod" Permission="644"/>
+        <File Location="doc/hu/ArticleCopyMoveDelete.pod" Permission="644"/>
         <File Location="Kernel/Config/Files/AgentArticleCopyMove.xml" Permission="644"/>
         <File Location="Kernel/Language/de_ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Language/es_ArticleCopyMoveDelete.pm" Permission="644"/>
+        <File Location="Kernel/Language/hu_ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Modules/AgentArticleCopyMove.pm" Permission="644"/>
         <File Location="Kernel/Output/HTML/FilterElementPost/ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Output/HTML/Templates/Standard/AgentArticleCopyMove.tt" Permission="644"/>
         <File Location="Kernel/System/Ticket/TicketExtensionsArticleCopyMove.pm" Permission="644"/>
         <File Location="var/packagesetup/ArticleCopyMoveDelete.pm" Permission="644"/>
     </Filelist>
-    <DatabaseInstall>
-    </DatabaseInstall>
-    <DatabaseUpgrade>
-    </DatabaseUpgrade>
-    <DatabaseReinstall>
-    </DatabaseReinstall>
-    <DatabaseUninstall>
-    </DatabaseUninstall>
 </otrs_package>

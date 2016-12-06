@@ -30,7 +30,7 @@
         <div class="Content">
             <fieldset class="TableLike FixedLabel">
                 <label class="Mandatory">
-                    [% Translate("Article") | html %]-[% Translate("Subject") | html %]:
+                    [% Translate("Article subject") | html %]:
                 </label>
                 <div class="Field">
                     [% Data.Subject | html %]
@@ -85,7 +85,7 @@
                 <div class="Clear"></div>
                 <label class="Mandatory" for="NewTicketNumber">
                     <span class="Marker">*</span>
-                    [% Config("Ticket::Hook") %] [% Translate("of destination ticket") | html %]:
+                    [% Translate("%s of destination ticket", Config("Ticket::Hook")) | html %]:
                 </label>
                 <div class="Value">
                     <input type="text" name="NewTicketNumber" id="NewTicketNumber" value="[% Data.NewTicketNumber | html %]" class="W20pc Validate_Required [% Data.NewTicketNumberInvalid | html %]"/>
@@ -103,7 +103,7 @@
                 <div class="Field">
                     <input type="text" name="TimeUnits" id="TimeUnits" value="[% Data.AccountedTime | html %]" class="W10pc Validate_TimeUnits Validate_Lower Validate_Lower_[% Data.AccountedTime | html %] [% Data.NeedAccountedTime | html %]"/>
                     [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]
-                    <div id="TimeUnitsError" class="TooltipErrorMessage"><p>[% Translate("Invalid time!") | html %]<br/>[% Translate("You cannot asign more time units as in the source article!") | html %]</p></div>
+                    <div id="TimeUnitsError" class="TooltipErrorMessage"><p>[% Translate("Invalid time!") | html %]<br/>[% Translate("You cannot assign more time units as in the source article!") | html %]</p></div>
                 </div>
                 <div class="Clear"></div>
 
@@ -128,7 +128,7 @@
 
         </div>
         <div class="Footer">
-            <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check"></i> [% Translate("Submit") | html %]</span></button>
+            <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
         </div>
     </div>
 </form>
