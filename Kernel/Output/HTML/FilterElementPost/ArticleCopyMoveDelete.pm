@@ -2,7 +2,7 @@
 # Kernel/Output/HTML/FilterElementPost/ArticleCopyMoveDelete.pm - Output filter to provide a link
 # to switch from customers to agents frontend and vice versa
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-# Changes Copyright (C) 2016 Perl-Services.de
+# Changes Copyright (C) 2016 - 2018 Perl-Services.de
 #
 # written/edited by:
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
@@ -58,6 +58,7 @@ sub Run {
     my $LanguageObject = $Kernel::OM->Get('Kernel::Language');
     my $LayoutObject   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject   = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $GroupObject    = $Kernel::OM->Get('Kernel::System::Group');
 
     if ( !$Self->{UserType} || ( $Self->{UserType} ne 'User' ) ) {
         return $Self;
@@ -91,10 +92,9 @@ sub Run {
         . $LanguageObject->Translate('Copy/Move/Delete')
         . '</a></li>';
 
-    my $AgentPatternShort = '<li>.+Action=AgentTicketPrint;TicketID=(\d+);'
-        . 'ArticleID=(\d+).*?<\/li>';
-    my $AgentPatternLong = '<li>.+Action=AgentTicketPrint;TicketID=(\d+);'
-        . 'ArticleID=(\d+);'.$SessionIDParamName.'=(\w+).*?<\/li>';
+    my $AgentPatternShort = '<li>\s+<a \s+ href="[^"]+?AgentTicketPrint;TicketID=(\d+);ArticleID=(\d+)[^"]+".+?</li>';
+    my $AgentPatternLong  = '<li>\s+<a \s+ href="[^"]+?AgentTicketPrint;TicketID=(\d+);ArticleID=(\d+);'
+        . $SessionIDParamName . '=(\w+)[^"]+".+?</li>';
 
     if (
         (
@@ -112,14 +112,22 @@ sub Run {
         # check group permissions...
         my $Groups = $ArticleCopyMoveDeleteReg->{Group} || '';
         if ( $Groups && ref($Groups) eq 'ARRAY' ) {
+
+            my %UserGroups = $GroupObject->PermissionUserGet(
+                UserID => $LayoutObject->{UserID},
+                Type   => 'rw',
+            );
+
+            my %GroupNameIDs = reverse %UserGroups;
+
             for my $Group ( @{$Groups} ) {
-                next if !$LayoutObject->{"UserIsGroup[$Group]"};
-                if ( $LayoutObject->{"UserIsGroup[$Group]"} eq 'Yes' ) {
-                    $Access = 1;
-                    last;
-                }
+                next if !$GroupNameIDs{$Group};
+
+                $Access = 1;
+                last;
             }
         }
+
         return if ( !$Access );
 
         # check owner...
@@ -127,6 +135,7 @@ sub Run {
             TicketID => $TicketID,
             OwnerID  => $Self->{UserID},
         );
+
         return if ( !$Access );
 
         $ArticleActionLink =~ s/OTRS_TICKET_ID/$TicketID/g;

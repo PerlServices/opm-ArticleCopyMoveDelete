@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.1">
     <Name>ArticleCopyMoveDelete</Name>
-    <Version>5.0.2</Version>
+    <Version>6.0.1</Version>
     <Vendor>Perl-Services.de, c.a.p.e. IT GmbH</Vendor>
     <URL>http://www.cape-it.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -105,27 +105,11 @@
         c.a.p.e. IT ...easy.&lt;br/&gt;
         &lt;br/&gt;
     </IntroUpgrade>
-    <CodeInstall Type="post">
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeInstall();
-    </CodeInstall>
-    <CodeUpgrade Type="post">
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUpgrade();
-    </CodeUpgrade>
-    <CodeUninstall Type="pre">
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeUninstall();
-    </CodeUninstall>
-    <CodeReinstall Type="post">
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}-&gt;{Name}-&gt;{Content};
-        $Kernel::OM-&gt;Get($CodeModule)-&gt;CodeReinstall();
-    </CodeReinstall>
     <Filelist>
         <File Location="doc/CHANGES_ArticleCopyMoveDelete.md" Permission="644"/>
         <File Location="doc/en/ArticleCopyMoveDelete.pod" Permission="644"/>
         <File Location="doc/hu/ArticleCopyMoveDelete.pod" Permission="644"/>
-        <File Location="Kernel/Config/Files/AgentArticleCopyMove.xml" Permission="644"/>
+        <File Location="Kernel/Config/Files/XML/AgentArticleCopyMove.xml" Permission="644"/>
         <File Location="Kernel/Language/de_ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Language/es_ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Language/hu_ArticleCopyMoveDelete.pm" Permission="644"/>

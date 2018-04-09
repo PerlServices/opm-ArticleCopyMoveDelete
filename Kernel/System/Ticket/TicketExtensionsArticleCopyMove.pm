@@ -72,6 +72,14 @@ sub ArticleMove {
 
     # clear ticket cache
     delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
+    delete $Self->{ 'Cache::GetTicket' . $Param{OldTicketID} };
+
+    for my $Key ( qw/TicketID OldTicketID/ ) {
+        $Kernel::OM->Get('Kernel::System::Cache')->Delete(
+            Type => 'Article',
+            Key  => '_MetaArticleList::' . $Param{$Key},
+        );
+    }
 
     # event
     $Self->EventHandler(
@@ -111,52 +119,65 @@ sub ArticleCopy {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for my $Needed (qw(ArticleID TicketID UserID)) {
+    for my $Needed (qw(ArticleID NewTicketID TicketID UserID)) {
         if ( !$Param{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "ArticleCopy: Need $Needed!" );
             return;
         }
     }
 
-    # get original article content
-    my %Article = $Self->ArticleGet(
+    my $ArticleObject = $Kernel::OM->Get('Kernel::System::Ticket::Article');
+    my $BackendObject = $ArticleObject->BackendForArticle(
+        ArticleID => $Param{ArticleID},
+        TicketID  => $Param{TicketID},
+    );
+    my ($Article) = $ArticleObject->ArticleList(
+        TicketID => $Param{TicketID},
         ArticleID => $Param{ArticleID},
     );
+
+    # get original article content
+    my %Article = $BackendObject->ArticleGet(
+        ArticleID => $Param{ArticleID},
+        TicketID  => $Param{TicketID},
+    );
+
     return 'NoOriginal' if !%Article;
 
     # copy original article
-    my $CopyArticleID = $Self->ArticleCreate(
+    my $CopyArticleID = $BackendObject->ArticleCreate(
         %Article,
-        TicketID       => $Param{TicketID},
+        TicketID       => $Param{NewTicketID},
         UserID         => $Param{UserID},
         HistoryType    => 'Misc',
         HistoryComment => "Copied article $Param{ArticleID} from "
             . "ticket $Article{TicketID} to ticket $Param{TicketID}",
     );
+
     return 'CopyFailed' if !$CopyArticleID;
 
     # set article times from original article
     return 'UpdateFailed' if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL =>
-            'UPDATE article SET create_time = ?, change_time = ?, incoming_time = ? WHERE id = ?',
+            'UPDATE article_data_mime SET incoming_time = ? WHERE article_id = ?',
         Bind => [
-            \$Article{Created},      \$Article{Changed},
             \$Article{IncomingTime}, \$CopyArticleID
         ],
     );
 
     # copy attachments from original article
-    my %ArticleIndex = $Self->ArticleAttachmentIndex(
+    my %ArticleIndex = $BackendObject->ArticleAttachmentIndex(
         ArticleID => $Param{ArticleID},
         UserID    => $Param{UserID},
     );
+
     for my $Index ( keys %ArticleIndex ) {
-        my %Attachment = $Self->ArticleAttachment(
+        my %Attachment = $BackendObject->ArticleAttachment(
             ArticleID => $Param{ArticleID},
             FileID    => $Index,
             UserID    => $Param{UserID},
         );
-        $Self->ArticleWriteAttachment(
+        $BackendObject->ArticleWriteAttachment(
             %Attachment,
             ArticleID => $CopyArticleID,
             UserID    => $Param{UserID},
@@ -167,12 +188,13 @@ sub ArticleCopy {
     delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
 
     # copy plain article if exists
-    if ( $Article{ArticleType} =~ /email/i ) {
-        my $Data = $Self->ArticlePlain(
-            ArticleID => $Param{ArticleID}
+    if ( $BackendObject->ChannelNameGet() eq 'Email' ) {
+        my $Data = $BackendObject->ArticlePlain(
+            ArticleID => $Param{ArticleID},
+            TicketID  => $Param{TicketID},
         );
         if ($Data) {
-            $Self->ArticleWritePlain(
+            $BackendObject->ArticleWritePlain(
                 ArticleID => $CopyArticleID,
                 Email     => $Data,
                 UserID    => $Param{UserID},
@@ -184,7 +206,7 @@ sub ArticleCopy {
     $Self->EventHandler(
         Event => 'ArticleCopy',
         Data  => {
-            TicketID     => $Param{TicketID},
+            TicketID     => $Param{NewTicketID},
             ArticleID    => $CopyArticleID,
             OldArticleID => $Param{ArticleID},
         },
@@ -216,7 +238,7 @@ sub ArticleFullDelete {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for my $Needed (qw(ArticleID UserID)) {
+    for my $Needed (qw(TicketID ArticleID UserID)) {
         if ( !$Param{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')
                 ->Log( Priority => 'error', Message => "ArticleFullDelete: Need $Needed!" );
@@ -224,10 +246,19 @@ sub ArticleFullDelete {
         }
     }
 
-    # get article content
-    my %Article = $Self->ArticleGet(
+    my $ArticleObject = $Kernel::OM->Get('Kernel::System::Ticket::Article');
+    my $BackendObject = $ArticleObject->BackendForArticle(
         ArticleID => $Param{ArticleID},
+        TicketID  => $Param{TicketID},
     );
+
+    # get article content
+    
+    my %Article = $BackendObject->ArticleGet(
+        ArticleID => $Param{ArticleID},
+        TicketID  => $Param{TicketID},
+    );
+
     return if !%Article;
 
     # clear ticket cache
@@ -240,8 +271,9 @@ sub ArticleFullDelete {
     );
 
     # delete article, attachments and plain emails
-    return if !$Self->ArticleDelete(
+    return if !$BackendObject->ArticleDelete(
         ArticleID => $Param{ArticleID},
+        TicketID  => $Param{TicketID},
         UserID    => $Param{UserID},
     );
 
@@ -249,7 +281,7 @@ sub ArticleFullDelete {
     $Self->EventHandler(
         Event => 'ArticleFullDelete',
         Data  => {
-            TicketID  => $Article{TicketID},
+            TicketID  => $Param{TicketID},
             ArticleID => $Param{ArticleID},
         },
         UserID => $Param{UserID},
@@ -286,9 +318,9 @@ sub ArticleCreateDateUpdate {
 
     # db update
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => "UPDATE article SET incoming_time = ?, create_time = ?,"
+        SQL => "UPDATE article SET incoming_time = ?, "
             . "change_time = current_timestamp, change_by = ? WHERE id = ?",
-        Bind => [ \$Param{IncomingTime}, \$Param{Created}, \$Param{UserID}, \$Param{ArticleID} ],
+        Bind => [ \$Param{IncomingTime}, \$Param{UserID}, \$Param{ArticleID} ],
     );
 
     # event

@@ -1,7 +1,7 @@
 # --
 # Kernel/Modules/AgentArticleCopyMove.pm - to copy or move articles
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-# Changes Copyright (C) 2016 Perl-Services.de, http://perl-services.de
+# Changes Copyright (C) 2016 - 2018 Perl-Services.de, http://perl-services.de
 #
 # written/edited by:
 # * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
@@ -46,10 +46,12 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ArticleObject = $Kernel::OM->Get('Kernel::System::Ticket::Article');
+    my $GroupObject   = $Kernel::OM->Get('Kernel::System::Group');
 
     my $Output = $LayoutObject->Header( Type => 'Small' );
 
@@ -57,13 +59,21 @@ sub Run {
     my $Access = 0;
     my $Groups = $ConfigObject->Get('Frontend::Module')->{AgentArticleCopyMove}->{Group}
         || '';
+
     if ( $Groups && ref($Groups) eq 'ARRAY' ) {
+
+        my %UserGroups = $GroupObject->PermissionUserGet(
+            UserID => $LayoutObject->{UserID},
+            Type   => 'rw',
+        );
+
+        my %GroupNameIDs = reverse %UserGroups;
+
         for my $Group ( @{$Groups} ) {
-            next if !$LayoutObject->{"UserIsGroup[$Group]"};
-            if ( $LayoutObject->{"UserIsGroup[$Group]"} eq 'Yes' ) {
-                $Access = 1;
-                last;
-            }
+            next if !$GroupNameIDs{$Group};
+
+            $Access = 1;
+            last;
         }
     }
     else {
@@ -111,25 +121,32 @@ sub Run {
         return $Output;
     }
 
-    # get first article
-    my %FirstArticle = $TicketObject->ArticleFirstArticle(
-        TicketID => $GetParam{TicketID},
+    my ($FirstArticle) = $ArticleObject->ArticleList(
+        TicketID  => $GetParam{TicketID},
+        OnlyFirst => 1,
     );
 
     # check copy or move first article
-    if ( $GetParam{ArticleID} != $FirstArticle{ArticleID} ) {
+    if ( $GetParam{ArticleID} != $FirstArticle->{ArticleID} ) {
         $GetParam{FurtherActionOptions} = 1;
     }
 
-    # get article content
-    my %Article = $TicketObject->ArticleGet(
+    my $BackendObject = $ArticleObject->BackendForArticle(
+        TicketID  => $GetParam{TicketID},
         ArticleID => $GetParam{ArticleID},
     );
 
+    # get article content
+    my %Article = $BackendObject->ArticleGet(
+        ArticleID => $GetParam{ArticleID},
+        TicketID  => $GetParam{TicketID},
+    );
+
     # get accounting time
-    $Param{AccountedTime} = $TicketObject->ArticleAccountedTimeGet(
+    $Param{AccountedTime} = $ArticleObject->ArticleAccountedTimeGet(
         ArticleID => $GetParam{ArticleID},
     );
+
     if ( $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime') ) {
         $Param{NeedAccountedTime} = 'Validate_Required';
     }
@@ -158,6 +175,7 @@ sub Run {
         if ( $GetParam{ArticleAction} eq 'Delete' ) {
             my $DeleteResult = $TicketObject->ArticleFullDelete(
                 ArticleID => $GetParam{ArticleID},
+                TicketID  => $GetParam{TicketID},
                 UserID    => $Self->{UserID},
             );
             if ( !$DeleteResult ) {
@@ -165,7 +183,7 @@ sub Run {
                     Message => $LayoutObject->{LanguageObject}->Translate(
                         'Can\'t delete article %s from ticket %s!',
                         $GetParam{ArticleID},
-                        $Article{TicketNumber},
+                        $GetParam{TicketID},
                     ),
                     Comment => Translatable('Please contact the administrator.'),
                 );
@@ -202,7 +220,7 @@ sub Run {
             );
             if ( !$NewTicketID ) {
                 $Output .= $LayoutObject->Notify(
-                    Info => $LayoutObject->{LanguageObject}>Translate(
+                    Info => $LayoutObject->{LanguageObject}->Translate(
                         'Sorry, no ticket found for ticket number: %s!',
                         $GetParam{NewTicketNumber},
                     ),
@@ -236,13 +254,14 @@ sub Run {
         # copy article
         if ( $GetParam{ArticleAction} eq 'Copy' ) {
             my $CopyResult = $TicketObject->ArticleCopy(
-                TicketID  => $NewTicketID,
-                ArticleID => $GetParam{ArticleID},
-                UserID    => $Self->{UserID},
+                NewTicketID => $NewTicketID,
+                TicketID    => $GetParam{TicketID},
+                ArticleID   => $GetParam{ArticleID},
+                UserID      => $Self->{UserID},
             );
             if ( $CopyResult eq 'CopyFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}>Translate(
+                    Message => $LayoutObject->{LanguageObject}->Translate(
                         'Can\'t copy article %s to ticket %s!',
                         $GetParam{ArticleID},
                         $GetParam{NewTicketNumber},
@@ -252,7 +271,7 @@ sub Run {
             }
             elsif ( $CopyResult eq 'UpdateFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}>Translate(
+                    Message => $LayoutObject->{LanguageObject}->Translate(
                         'Can\'t update times for article %s!',
                         $GetParam{ArticleID},
                     ),
@@ -272,7 +291,8 @@ sub Run {
 
             # delete accounted time from old article
             if ( $GetParam{TimeUnitsOriginal} ne 'Keep' ) {
-                $TicketObject->ArticleAccountedTimeDelete(
+                my $ArticleObject = $Kernel::OM->Get('Kernel::System::Ticket::Article');
+                $ArticleObject->ArticleAccountedTimeDelete(
                     ArticleID => $GetParam{ArticleID},
                 );
             }
@@ -302,13 +322,15 @@ sub Run {
         # move article
         elsif ( $GetParam{ArticleAction} eq 'Move' ) {
             my $MoveResult = $TicketObject->ArticleMove(
-                TicketID  => $NewTicketID,
-                ArticleID => $GetParam{ArticleID},
-                UserID    => $Self->{UserID},
+                OldTicketID => $GetParam{TicketID},
+                TicketID    => $NewTicketID,
+                ArticleID   => $GetParam{ArticleID},
+                UserID      => $Self->{UserID},
             );
+
             if ( $MoveResult eq 'MoveFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}>Translate(
+                    Message => $LayoutObject->{LanguageObject}->Translate(
                         'Can\'t move article %s to ticket %s!',
                         $GetParam{ArticleID},
                         $GetParam{NewTicketNumber},
@@ -318,7 +340,7 @@ sub Run {
             }
             if ( $MoveResult eq 'AccountFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}>Translate(
+                    Message => $LayoutObject->{LanguageObject}->Translate(
                         'Can\'t update ticket ID in time accounting data for article %s!',
                         $GetParam{ArticleID},
                     ),
