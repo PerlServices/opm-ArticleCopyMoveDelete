@@ -117,6 +117,5 @@
         <File Location="Kernel/Output/HTML/FilterElementPost/ArticleCopyMoveDelete.pm" Permission="644"/>
         <File Location="Kernel/Output/HTML/Templates/Standard/AgentArticleCopyMove.tt" Permission="644"/>
         <File Location="Kernel/System/Ticket/TicketExtensionsArticleCopyMove.pm" Permission="644"/>
-        <File Location="var/packagesetup/ArticleCopyMoveDelete.pm" Permission="644"/>
     </Filelist>
 </otrs_package>
