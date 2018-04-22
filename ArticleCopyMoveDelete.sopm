@@ -9,7 +9,7 @@
     <ChangeLog Version="4.0.0" Date="2015-03-13 10:46:18">CR: T2015031190000358 (added spanish translation file. Thanks to Eladio Galvez from JoopBox.com), T2015031190000358 (changes for OTRS-Framework 4.0.x).</ChangeLog>
     <Description Lang="en">Allows to copy, move or delete articles.</Description>
     <Description Lang="hu">Lehetővé teszi a bejegyzések másolását, áthelyezését vagy törlését.</Description>
-    <Framework>5.0.x</Framework>
+    <Framework>6.0.x</Framework>
     <IntroInstall Lang="en" Title="Install Information" Type="pre">
         &lt;br/&gt;
         &lt;strong&gt;WELCOME&lt;/strong&gt;
