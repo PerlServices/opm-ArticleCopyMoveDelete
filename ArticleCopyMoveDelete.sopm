@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.1">
     <Name>ArticleCopyMoveDelete</Name>
-    <Version>6.0.3</Version>
+    <Version>6.0.4</Version>
     <Vendor>Perl-Services.de, c.a.p.e. IT GmbH</Vendor>
     <URL>http://www.cape-it.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -9,12 +9,13 @@
     <Description Lang="hu">Lehetővé teszi a bejegyzések másolását, áthelyezését vagy törlését.</Description>
     <Framework>6.0.x</Framework>
     <Framework>6.1.x</Framework>
+    <Framework>6.2.x</Framework>
     <IntroInstall Lang="en" Title="Install Information" Type="pre">
         &lt;br/&gt;
         &lt;strong&gt;WELCOME&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        You are about to install the OTRS module ArticleCopyMoveDelete.
+        You are about to install the Znuny addon ArticleCopyMoveDelete.
         &lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
@@ -26,7 +27,7 @@
         &lt;strong&gt;WELCOME&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        Due to the lack of configurable article actions in basic OTRS this package uses an output filter, which hooks on ArticlePrint. So be aware, that if you disable ArticlePrint you will also disable ArticleCopyMoveDelete.
+        Due to the lack of configurable article actions in basic Znuny this package uses an output filter, which hooks on ArticlePrint. So be aware, that if you disable ArticlePrint you will also disable ArticleCopyMoveDelete.
         &lt;br/&gt;
         &lt;br/&gt;
         c.a.p.e. IT ...easy.&lt;br/&gt;
@@ -37,7 +38,7 @@
         &lt;strong&gt;WELCOME&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        You are about to UNINSTALL the ArticleCopyMoveDelete extensions package for OTRS.&lt;br/&gt;
+        You are about to UNINSTALL the ArticleCopyMoveDelete extensions package for Znuny.&lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
@@ -49,7 +50,7 @@
         &lt;strong&gt;WELCOME&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        You are about to upgrade the ArticleCopyMoveDelete extensions package for OTRS.&lt;br/&gt;
+        You are about to upgrade the ArticleCopyMoveDelete extensions package for Znuny.&lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
         c.a.p.e. IT ...easy.&lt;br/&gt;
@@ -60,7 +61,7 @@
         &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        Ön az ArticleCopyMoveDelete OTRS csomag telepítésére készül.
+        Ön az ArticleCopyMoveDelete Znuny csomag telepítésére készül.
         &lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
@@ -72,7 +73,7 @@
         &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        Az alap OTRS-ben a beállítható bejegyzésműveletek hiánya miatt ez a csomag egy
+        Az alap Znuny-ben a beállítható bejegyzésműveletek hiánya miatt ez a csomag egy
         kimenetszűrőt használ, amely a bejegyzésnyomtatásra kapcsolódik. Ezért legyen
         tudatában annak, hogy ha letiltja a bejegyzésnyomtatást, akkor le fogja tiltani
         a bejegyzés másolását, áthelyezését és törlését is.
@@ -86,7 +87,7 @@
         &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        Ön az ArticleCopyMoveDelete OTRS kiegészítő csomag ELTÁVOLÍTÁSÁRA készül.&lt;br/&gt;
+        Ön az ArticleCopyMoveDelete Znuny kiegészítő csomag ELTÁVOLÍTÁSÁRA készül.&lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
@@ -98,14 +99,13 @@
         &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        Ön az ArticleCopyMoveDelete OTRS kiegészítő csomag frissítésére készül.&lt;br/&gt;
+        Ön az ArticleCopyMoveDelete Znuny kiegészítő csomag frissítésére készül.&lt;br/&gt;
         &lt;br/&gt;
         &lt;br/&gt;
         c.a.p.e. IT ...easy.&lt;br/&gt;
         &lt;br/&gt;
     </IntroUpgrade>
     <Filelist>
-        <File Location="doc/CHANGES_ArticleCopyMoveDelete.md" Permission="644"/>
         <File Location="doc/en/ArticleCopyMoveDelete.pod" Permission="644"/>
         <File Location="doc/hu/ArticleCopyMoveDelete.pod" Permission="644"/>
         <File Location="Kernel/Config/Files/XML/AgentArticleCopyMove.xml" Permission="644"/>
