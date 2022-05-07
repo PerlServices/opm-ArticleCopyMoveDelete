@@ -1,7 +1,7 @@
 # --
 # Kernel/Modules/AgentArticleCopyMove.pm - to copy or move articles
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-# Changes Copyright (C) 2016 - 2018 Perl-Services.de, http://perl-services.de
+# Changes Copyright (C) 2016 - 2022 Perl-Services.de, https://www.perl-services.de
 #
 # written/edited by:
 # * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
