@@ -2,7 +2,7 @@
 # Kernel/Output/HTML/FilterElementPost/ArticleCopyMoveDelete.pm - Output filter to provide a link
 # to switch from customers to agents frontend and vice versa
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-# Changes Copyright (C) 2016 - 2022 Perl-Services.de
+# Changes Copyright (C) 2016 - 2023 Perl-Services.de
 #
 # written/edited by:
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
