@@ -1,122 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<otrs_package version="1.1">
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_package version="1.0">
+    <!-- GENERATED WITH OPM::Maker::Command::sopm (1.1.0) -->
     <Name>ArticleCopyMoveDelete</Name>
-    <Version>6.0.6</Version>
-    <Vendor>Perl-Services.de, c.a.p.e. IT GmbH</Vendor>
-    <URL>http://www.cape-it.de/</URL>
-    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
-    <Description Lang="en">Allows to copy, move or delete articles.</Description>
-    <Description Lang="hu">Lehetővé teszi a bejegyzések másolását, áthelyezését vagy törlését.</Description>
+    <Version>6.0.7</Version>
     <Framework>6.0.x</Framework>
     <Framework>6.1.x</Framework>
     <Framework>6.2.x</Framework>
     <Framework>6.3.x</Framework>
     <Framework>6.4.x</Framework>
-    <IntroInstall Lang="en" Title="Install Information" Type="pre">
-        &lt;br/&gt;
-        &lt;strong&gt;WELCOME&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        You are about to install the Znuny addon ArticleCopyMoveDelete.
-        &lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroInstall>
-    <IntroInstall Lang="en" Title="Installation Information" Type="post">
-        &lt;br/&gt;
-        &lt;strong&gt;WELCOME&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        Due to the lack of configurable article actions in basic Znuny this package uses an output filter, which hooks on ArticlePrint. So be aware, that if you disable ArticlePrint you will also disable ArticleCopyMoveDelete.
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroInstall>
-    <IntroUninstall Lang="en" Title="Uninstallation Information" Type="pre">
-        &lt;br/&gt;
-        &lt;strong&gt;WELCOME&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        You are about to UNINSTALL the ArticleCopyMoveDelete extensions package for Znuny.&lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroUninstall>
-    <IntroUpgrade Lang="en" Title="Upgrade Information" Type="pre">
-        &lt;br/&gt;
-        &lt;strong&gt;WELCOME&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        You are about to upgrade the ArticleCopyMoveDelete extensions package for Znuny.&lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroUpgrade>
-    <IntroInstall Lang="hu" Title="Telepítési információk" Type="pre">
-        &lt;br/&gt;
-        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        Ön az ArticleCopyMoveDelete Znuny csomag telepítésére készül.
-        &lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroInstall>
-    <IntroInstall Lang="hu" Title="Telepítési információk" Type="post">
-        &lt;br/&gt;
-        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        Az alap Znuny-ben a beállítható bejegyzésműveletek hiánya miatt ez a csomag egy
-        kimenetszűrőt használ, amely a bejegyzésnyomtatásra kapcsolódik. Ezért legyen
-        tudatában annak, hogy ha letiltja a bejegyzésnyomtatást, akkor le fogja tiltani
-        a bejegyzés másolását, áthelyezését és törlését is.
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroInstall>
-    <IntroUninstall Lang="hu" Title="Eltávolítási információk" Type="pre">
-        &lt;br/&gt;
-        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        Ön az ArticleCopyMoveDelete Znuny kiegészítő csomag ELTÁVOLÍTÁSÁRA készül.&lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroUninstall>
-    <IntroUpgrade Lang="hu" Title="Frissítési információk" Type="pre">
-        &lt;br/&gt;
-        &lt;strong&gt;ÜDVÖZÖLJÜK&lt;/strong&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        Ön az ArticleCopyMoveDelete Znuny kiegészítő csomag frissítésére készül.&lt;br/&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        c.a.p.e. IT ...easy.&lt;br/&gt;
-        &lt;br/&gt;
-    </IntroUpgrade>
+    <Framework>6.5.x</Framework>
+    <Vendor>Perl-Services.de</Vendor>
+    <URL>https://www.perl-services.de</URL>
+    <Description Lang="de">Ermöglicht es, Artikel zu kopieren, verschieben oder löschen</Description>
+    <Description Lang="en">Allows to copy, move or delete articles.</Description>
+    <Description Lang="hu">Lehetővé teszi a bejegyzések másolását, áthelyezését vagy törlését.</Description>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Filelist>
-        <File Location="doc/en/ArticleCopyMoveDelete.pod" Permission="644"/>
-        <File Location="doc/hu/ArticleCopyMoveDelete.pod" Permission="644"/>
-        <File Location="Kernel/Config/Files/XML/AgentArticleCopyMove.xml" Permission="644"/>
-        <File Location="Kernel/Language/de_ArticleCopyMoveDelete.pm" Permission="644"/>
-        <File Location="Kernel/Language/es_ArticleCopyMoveDelete.pm" Permission="644"/>
-        <File Location="Kernel/Language/hu_ArticleCopyMoveDelete.pm" Permission="644"/>
-        <File Location="Kernel/Modules/AgentArticleCopyMove.pm" Permission="644"/>
-        <File Location="Kernel/Output/HTML/FilterElementPost/ArticleCopyMoveDelete.pm" Permission="644"/>
-        <File Location="Kernel/Output/HTML/Templates/Standard/AgentArticleCopyMove.tt" Permission="644"/>
-        <File Location="Kernel/System/Ticket/TicketExtensionsArticleCopyMove.pm" Permission="644"/>
+        <File Permission="644" Location="Kernel/Config/Files/XML/AgentArticleCopyMove.xml" />
+        <File Permission="644" Location="Kernel/Language/de_ArticleCopyMoveDelete.pm" />
+        <File Permission="644" Location="Kernel/Language/es_ArticleCopyMoveDelete.pm" />
+        <File Permission="644" Location="Kernel/Language/hu_ArticleCopyMoveDelete.pm" />
+        <File Permission="644" Location="Kernel/Modules/AgentArticleCopyMove.pm" />
+        <File Permission="644" Location="Kernel/Output/HTML/ArticleAction/AgentArticleCopyMoveDelete.pm" />
+        <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentArticleCopyMove.tt" />
+        <File Permission="644" Location="Kernel/System/Ticket/TicketExtensionsArticleCopyMove.pm" />
+        <File Permission="644" Location="doc/en/ArticleCopyMoveDelete.pod" />
+        <File Permission="644" Location="doc/hu/ArticleCopyMoveDelete.pod" />
+        <File Permission="644" Location="var/packagesetup/ArticleCopyMoveDelete.pm" />
     </Filelist>
+    <CodeInstall Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::' . $Param{Structure}->{Name}->{Content} )->CodeInstall();
+    ]]></CodeInstall>
+    <CodeUpgrade Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::' . $Param{Structure}->{Name}->{Content} )->CodeUpgrade();
+    ]]></CodeUpgrade>
 </otrs_package>
