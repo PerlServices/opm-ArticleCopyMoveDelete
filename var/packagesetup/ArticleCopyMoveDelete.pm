@@ -76,6 +76,8 @@ run the code reinstall part
 sub CodeReinstall {
     my ( $Self, %Param ) = @_;
 
+    $Self->_DoSysConfigChanges();
+
     return 1;
 }
 
@@ -103,6 +105,8 @@ run the code uninstall part
 
 sub CodeUninstall {
     my ( $Self, %Param ) = @_;
+
+    $Self->_DoSysConfigChanges();
 
     return 1;
 }
