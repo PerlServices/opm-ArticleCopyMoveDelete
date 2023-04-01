@@ -127,7 +127,7 @@ sub _DoSysConfigChanges {
     my @Settings;
     my $Changed;
 
-    for my $Channel ( qw/Internal Phone Email Chat/ ) {
+    for my $Channel ( qw/Internal Phone Email/ ) {
         if ( !$ArticleActions->{$Channel}->{ArticleCopyMoveDelete} ) {
             $ArticleActions->{$Channel}->{ArticleCopyMoveDelete} = {
                 Module => 'Kernel::Output::HTML::ArticleAction::AgentArticleCopyMoveDelete',
